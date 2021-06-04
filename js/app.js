@@ -6,13 +6,6 @@ let addBtn = document.getElementById('addBtn');
 addBtn.addEventListener('click', function (e) {
     let addTxt = document.getElementById('addTxt');
     let addTitle = document.getElementById('addTitle');
-    let notesTtl = localStorage.getItem('title');
-    if (notesTtl == null) {
-        notesTtlObj = [];
-    }
-    else {
-        notesTtlObj = JSON.parse(notesTtl)
-    }
     let notes = localStorage.getItem('notes');
     if (notes == null) {
         notesObj = [];
@@ -28,9 +21,11 @@ addBtn.addEventListener('click', function (e) {
         alert('Please write a Description to add a note!!')
     }
     else{
-        notesTtlObj.push(addTitle.value);
-        notesObj.push(addTxt.value);
-        localStorage.setItem('title', JSON.stringify(notesTtlObj));
+        let myObj = {
+            title: addTitle.value,
+            text: addTxt.value
+        }
+        notesObj.push(myObj);
         localStorage.setItem('notes', JSON.stringify(notesObj));
         addTxt.value = '';
         addTitle.value = '';
@@ -41,14 +36,7 @@ addBtn.addEventListener('click', function (e) {
 
 //Function to show elements from localStorage
 function showNotes() {
-    let title = localStorage.getItem('title');
     let notes = localStorage.getItem('notes');
-    if (title == null) {
-        notesTtlObj = [];
-    }
-    else {
-        notesTtlObj = JSON.parse(title);
-    }
     if (notes == null) {
         notesObj = [];
     }
@@ -60,8 +48,8 @@ function showNotes() {
         html += `
         <div class="noteCard my-2 mx-2 card" style="width: 18rem;">
             <div class="card-body">
-                <h5 class="card-title">${notesTtlObj[index]}</h5>
-                <p class="card-text">${element}</p>
+                <h5 class="card-title">${element.title}</h5>
+                <p class="card-text">${element.text}</p>
                 <button id="${index}" onclick="deleteNote(this.id)" class="btn btn-danger">Delete</button>
                 <button id="${index + important}" onclick="important(this.id)" class="btn btn-info">Important</button>
             </div>
@@ -81,23 +69,14 @@ function showNotes() {
 //function to delete a note
 function deleteNote(index){
     let notes = localStorage.getItem('notes');
-    let title = localStorage.getItem('title');
     if (notes == null) {
         notesObj = [];
     }
     else {
-        notesObj = JSON.parse(notes)
-    }
-    if (title == null) {
-        notesTtlObj = [];
-    }
-    else {
-        notesTtlObj = JSON.parse(notes)
+        notesObj = JSON.parse(notes);
     }
     notesObj.splice(index, 1);
-    notesTtlObj.splice(index, 1);
     localStorage.setItem('notes', JSON.stringify(notesObj));
-    localStorage.setItem('title', JSON.stringify(notesTtlObj));
     showNotes();
 }
 //function to add important in a node
